@@ -1,3 +1,6 @@
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QLineEdit, QPushButton, QGridLayout
+import sys
 from typing import List
 from math import pi
 
@@ -12,9 +15,10 @@ class ScientificCalculator:
             '-': 1,
             '*': 2,
             '/': 2,
-            '^': 3
+            '^': 3,
+            '!': 4
         }
-        self.sign = ['+', '-', '*', '/', '^', '(', ')']
+        self.sign = ['+', '-', '*', '/', '^', '(', ')', '!', 'sin', 'cos']
 
     def expression_pretreatment(self, expression: str) -> List:
         """pretreat the input infix expression, dealing with "-" and "." in the expression.
@@ -46,7 +50,7 @@ class ScientificCalculator:
         for item in expression_opt.split(" "):
             if item != "":
                 expression_list.append(item)
-
+        print(expression_list)
         return expression_list
 
     def postfix(self, expression_list: List) -> List:
@@ -187,8 +191,8 @@ class ScientificCalculator:
         """
         iteration, temp_r, temp_l = 0, 1, 0
         while self._fabs(temp_r) >= 1e-15:
-            temp_l+=temp_r
-            iteration+=1
+            temp_l += temp_r
+            iteration += 1
             temp_r *= value1/(iteration)
         return round(temp_l, 10)
 
@@ -201,6 +205,7 @@ class ScientificCalculator:
         Returns:
             float: the calculation result
         """
+        print(postfix)
 
         stack_cal = []
 
@@ -216,8 +221,11 @@ class ScientificCalculator:
         for item in postfix:
             if item in self.precedence.keys():
                 value1 = float(stack_cal.pop())
-                value2 = float(stack_cal.pop())
-                result = calculate_function[item](value1, value2)
+                if item not in ['!']:
+                    value2 = float(stack_cal.pop())
+                    result = calculate_function[item](value1, value2)
+                else:
+                    result = calculate_function[item](value1)
                 stack_cal.append(result)
             else:
                 stack_cal.append(item)
@@ -225,14 +233,106 @@ class ScientificCalculator:
         return stack_cal.pop()
 
 
-if __name__ == "__main__":
-    cal = ScientificCalculator()
-    print(cal._sin(pi/2), cal._sinplus(90, mode=1))
-    while True:
-        infix = input("Enter your calculate expression:\n")
-        try:
-            print(
-                f"Your result is {cal.calculate_postfix(cal.postfix(cal.expression_pretreatment(infix)))}\n"
-            )
-        except:
-            print("ERROR\nEnter again!\n")
+def add_superscript(text):
+    superscript_mapping = str.maketrans(
+        "0123456789+-=()abcdefghijklmnopqrstuvwxyzAB",
+        "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖᵠʳˢᵗᵘᵛʷˣʸᶻ½⅓"
+    )
+    return text.translate(superscript_mapping)
+
+
+class Calculator(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('Scientific Calculator')
+
+        self.line_edit = QLineEdit(self)
+        self.line_edit.setReadOnly(True)
+
+        self.buttons = [
+            '7',  '8', '9', '/',
+            '4',  '5', '6', '*',
+            '1',  '2', '3', '-',
+            '0',  '.', '=', '+',
+            '!',  'sin', 'cos',
+            "e"+add_superscript("x"),
+            'x'+add_superscript("2"),
+            'x'+add_superscript("A"),
+            'x'+add_superscript("3"),
+            'x'+add_superscript("B")
+        ]
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.line_edit)
+        
+        button_style = '''
+        QPushButton {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            font-size: 18px;
+            height: 40px;
+        }
+
+        QPushButton:hover {
+            background-color: #45a049;
+        }
+        '''
+        
+        for button_text in self.buttons:
+            button = QPushButton(button_text)
+            button.setStyleSheet(button_style)
+            button.clicked.connect(self.button_clicked)
+            layout.addWidget(button)
+
+        layout = QGridLayout()
+        layout.addWidget(self.line_edit, 0, 0, 1, 4)
+
+        row = 1
+        col = 0
+        for button_text in self.buttons:
+            button = QPushButton(button_text)
+            button.setStyleSheet(button_style)
+            button.clicked.connect(self.button_clicked)
+            layout.addWidget(button, row, col)
+            col += 1
+            if col > 3:
+                col = 0
+                row += 1
+
+        self.setLayout(layout)
+
+    def button_clicked(self):
+        # 获取点击的按钮
+        button = self.sender()
+        text = button.text()
+
+        if text == '=':
+            try:
+                infix_expression = self.line_edit.text()
+                cal = ScientificCalculator()
+                res = cal.calculate_postfix(cal.postfix(cal.expression_pretreatment(infix_expression)))
+                self.line_edit.setText(str(res))
+            except:
+                self.line_edit.setText('Error')
+        else:
+            self.line_edit.setText(self.line_edit.text() + text)
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    calculator = Calculator()
+    calculator.show()
+    sys.exit(app.exec_())
+
+
+# if __name__ == "__main__":
+#     cal = ScientificCalculator()
+#     while True:
+#         infix = input("Enter your calculate expression:\n")
+#         try:
+#             print(
+#                 f"Your result is {cal.calculate_postfix(cal.postfix(cal.expression_pretreatment(infix)))}\n"
+#             )
+#         except:
+#             print("ERROR\nEnter again!\n")
