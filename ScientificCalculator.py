@@ -1,3 +1,4 @@
+
 from typing import List
 from math import pi
 
@@ -12,9 +13,10 @@ class ScientificCalculator:
             '-': 1,
             '*': 2,
             '/': 2,
-            '^': 3
+            '^': 3,
+            '!': 4
         }
-        self.sign = ['+', '-', '*', '/', '^', '(', ')']
+        self.sign = ['+', '-', '*', '/', '^', '(', ')', '!', 'sin', 'cos']
 
     def expression_pretreatment(self, expression: str) -> List:
         """pretreat the input infix expression, dealing with "-" and "." in the expression.
@@ -46,7 +48,7 @@ class ScientificCalculator:
         for item in expression_opt.split(" "):
             if item != "":
                 expression_list.append(item)
-
+        print(expression_list)
         return expression_list
 
     def postfix(self, expression_list: List) -> List:
@@ -187,8 +189,8 @@ class ScientificCalculator:
         """
         iteration, temp_r, temp_l = 0, 1, 0
         while self._fabs(temp_r) >= 1e-15:
-            temp_l+=temp_r
-            iteration+=1
+            temp_l += temp_r
+            iteration += 1
             temp_r *= value1/(iteration)
         return round(temp_l, 10)
 
@@ -201,6 +203,7 @@ class ScientificCalculator:
         Returns:
             float: the calculation result
         """
+        print(postfix)
 
         stack_cal = []
 
@@ -216,23 +219,13 @@ class ScientificCalculator:
         for item in postfix:
             if item in self.precedence.keys():
                 value1 = float(stack_cal.pop())
-                value2 = float(stack_cal.pop())
-                result = calculate_function[item](value1, value2)
+                if item not in ['!']:
+                    value2 = float(stack_cal.pop())
+                    result = calculate_function[item](value1, value2)
+                else:
+                    result = calculate_function[item](value1)
                 stack_cal.append(result)
             else:
                 stack_cal.append(item)
 
         return stack_cal.pop()
-
-
-if __name__ == "__main__":
-    cal = ScientificCalculator()
-    print(cal._sin(pi/2), cal._sinplus(90, mode=1))
-    while True:
-        infix = input("Enter your calculate expression:\n")
-        try:
-            print(
-                f"Your result is {cal.calculate_postfix(cal.postfix(cal.expression_pretreatment(infix)))}\n"
-            )
-        except:
-            print("ERROR\nEnter again!\n")
