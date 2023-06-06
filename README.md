@@ -8,13 +8,9 @@ You must have a python environment on your server, or you can install it in its 
 
 Python=3.11.2 is requested.
 
-You can run the following scripts to run the configuration in a powershell terminal:
-```bash
-setup.sh
-```
+You can run the following commands to build the environments
 
-or you can run the following commands to build the environments
-```bash
+```shell
 python -m pip install --upgrade pip
 pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 pip install -r .\requirements.txt
@@ -22,8 +18,20 @@ pip install -r .\requirements.txt
 
 or if your python environment is named python3
 
-```bash
+```shell
 python3 -m pip install --upgrade pip
 pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 pip3 install -r .\requirements.txt
 ```
+
+## 2. Run
+
+You can run the Scientific Calculator by using the following command
+
+```shell
+python .\main.py
+```
+
+## 3.demo
+
+![]()
