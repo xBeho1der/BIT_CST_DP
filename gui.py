@@ -17,22 +17,25 @@ class Calculator(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.resize(960, 700)
         self.setWindowTitle('Scientific Calculator')
+        self.special_sign = {
+            "e"+add_superscript("x"): 'e^',
+            'x'+add_superscript("2"): '^2',
+            'x'+add_superscript("A"): '^(1.0/2)',
+            'x'+add_superscript("3"): '^3',
+            'x'+add_superscript("B"): '^(1.0/3)',
+            'x'+add_superscript("y"): '^y',
+        }
+        self.triangle_sign = {
+            'sin': '',
+            'cos': ''
+        }
+        self.num = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
+        self.sign = ['+', '-', '*', '/', '^', '(', ')', '!', 'sin', 'cos']
 
-        self.special_sign = [
-            "e"+add_superscript("x"),
-            'x'+add_superscript("2"),
-            'x'+add_superscript("A"),
-            'x'+add_superscript("3"),
-            'x'+add_superscript("B"),
-            'x'+add_superscript("y"),
-            'RAD', 'sin', 'cos'
-        ]
-
+        self.resize(960, 700)
         self.line_edit = QLineEdit(self)
         self.line_edit.setReadOnly(True)
-
         self.buttons = [
             'C',  'RAD', '!',  'Backspace',
             '7',  '8',   '9',  '/',
@@ -45,10 +48,9 @@ class Calculator(QWidget):
             'x'+add_superscript("A"),
             'x'+add_superscript("3"),
             'x'+add_superscript("B"),
-            'x'+add_superscript("y"), "e", "Pi"
+            'x'+add_superscript("y"), "e", "pi"
         ]
 
-        # layout = QVBoxLayout()
         layout = QGridLayout()
         self.line_edit.setFixedHeight(150)
         font = QFont("Arial", 32)
@@ -95,7 +97,6 @@ class Calculator(QWidget):
 
         self.setLayout(layout)
 
-
     def button_clicked(self):
 
         if self.line_edit.text() == 'Error':
@@ -112,36 +113,82 @@ class Calculator(QWidget):
                 self.line_edit.setText(str(res))
             except:
                 self.line_edit.setText('Error')
-        elif text == 'Pi':
-            self.line_edit.setText(str(pi))
-        elif text == 'e':
-            self.line_edit.setText(str(e))
         elif text == 'C':
             self.line_edit.clear()
         elif text == 'Backspace':
             self.line_edit.backspace()
+        elif text == 'e'+add_superscript("x"):
+            try:
+                list_temp = ScientificCalculator().expression_pretreatment(
+                    expression=self.line_edit.text())
+                last_word = list_temp[-1]
+                length_str = len(list_temp)
+                if last_word in self.num:
+                    list_temp.insert(-1, self.special_sign[text])
+                    return_str = "".join(list_temp)
+                    self.line_edit.setText(return_str)
+                elif last_word == ')':
+                    for i in range(length_str):
+                        if list_temp[length_str-i-1] == '(':
+                            list_temp.insert(
+                                length_str-i-1, self.special_sign[text])
+                            break
+                    return_str = "".join(list_temp)
+                    self.line_edit.setText(return_str)
+                elif last_word == '!':
+                    for i in range(length_str-1):
+                        if list_temp[length_str-i-1] != '!' and (list_temp[length_str-i-1] in self.sign or length_str-i-1 == 0):
+                            list_temp.insert(
+                                length_str-i-1, self.special_sign[text])
+                            break
+                    return_str = "".join(list_temp)
+                    self.line_edit.setText(return_str)
+                else:
+                    self.line_edit.setText('Error')
+            except:
+                self.line_edit.setText('Error')
+        elif text in self.special_sign.keys():
+            try:
+                list_temp = ScientificCalculator().expression_pretreatment(
+                    expression=self.line_edit.text())
+                last_word = list_temp[-1]
+                if last_word in self.num or last_word == ')' or last_word == '!':
+                    list_temp.append(self.special_sign[text])
+                    return_str = "".join(list_temp)
+                    self.line_edit.setText(return_str)
+                else:
+                    self.line_edit.setText('Error')
+            except:
+                self.line_edit.setText('Error')
+        elif text in self.triangle_sign.keys():
+            list_temp = ScientificCalculator().expression_pretreatment(
+                expression=self.line_edit.text())
+            try:
+                last_word = list_temp[-1]
+                length_str = len(list_temp)
+                if last_word in self.num:
+                    list_temp.insert(-2, 'sin')
+                    list_temp.insert(-1, '(')
+                    list_temp.append(')')
+                    return_str = "".join(list_temp)
+                    self.line_edit.setText(return_str)
+                elif last_word == '!':
+                    for i in range(length_str-1):
+                        if list_temp[length_str-i-1] != '!' and (list_temp[length_str-i-1] in self.sign or length_str-i-1 == 0):
+                            list_temp.insert(length_str-i-1, 'sin')
+                            break
+                    return_str = "".join(list_temp)
+                    self.line_edit.setText(return_str)
+                elif last_word == ')':
+                    for i in range(length_str):
+                        if list_temp[length_str-i-1] == '(':
+                            list_temp.insert(length_str-i-1, 'sin')
+                            break
+                    return_str = "".join(list_temp)
+                    self.line_edit.setText(return_str)
+                else:
+                    self.line_edit.setText('Error')
+            except:
+                self.line_edit.setText('Error')
         else:
-            if text not in self.special_sign:
-                self.line_edit.setText(self.line_edit.text() + text)
-            else:
-                # if text == "e"+add_superscript("x"):
-                # str_tmp = self.line_edit.text()+
-                # self.line_edit.setText
-                if text == 'x'+add_superscript("2"):
-                    str_tmp = self.line_edit.text()
-                    # 前一位是右括号并且有匹配时计算括号内计算式结果的平方
-                    # 是阶乘则先计算阶乘
-                    # 否则计算前一位的平方，平方优先级高！！！
-                    list_temp = ScientificCalculator().expression_pretreatment(expression=str_tmp)
-                    
-                    for item in list_temp:
-                        
-                    print(a)
-                    self.line_edit.setText(str_tmp)
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    calculator = Calculator()
-    calculator.show()
-    sys.exit(app.exec_())
+            self.line_edit.setText(self.line_edit.text() + text)

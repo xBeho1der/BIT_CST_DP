@@ -1,6 +1,6 @@
 
 from typing import List
-from math import pi
+from math import pi, e
 
 
 class ScientificCalculator:
@@ -14,11 +14,21 @@ class ScientificCalculator:
             '*': 2,
             '/': 2,
             '^': 3,
-            '!': 4
+            'sin': 3,
+            'cos': 3,
+            '!': 4,
         }
         self.sign = ['+', '-', '*', '/', '^', '(', ')', '!', 'sin', 'cos']
 
     def brackets_pare(self, expression_list: List) -> bool:
+        """judge whether the brackets pare
+
+        Args:
+            expression_list (List): the original expression_list
+
+        Returns:
+            bool: result
+        """
         return True if expression_list.count('(') == expression_list.count(')') else False
 
     def expression_pretreatment(self, expression: str) -> List:
@@ -49,9 +59,12 @@ class ScientificCalculator:
 
         expression_list = []
         for item in expression_opt.split(" "):
-            if item != "":
+            if item == 'e':
+                expression_list.append(str(e))
+            elif item == 'pi':
+                expression_list.append(str(pi))
+            elif item != "":
                 expression_list.append(item)
-        print(expression_list)
         return expression_list
 
     def postfix(self, expression_list: List) -> List:
@@ -143,50 +156,6 @@ class ScientificCalculator:
             float: result
         """
         return value2/value1
-
-    def _sqr(self, value1: float) -> float:
-        """square
-
-        Args:
-            value1 (float): input number
-
-        Returns:
-            float: result
-        """
-        return value1**2
-
-    def _sqrt(self, value1: float) -> float:
-        """square root
-
-        Args:
-            value1 (float): input number
-
-        Returns:
-            float: result
-        """
-        return value1**0.5
-
-    def _cube(self, value1: float) -> float:
-        """cube
-
-        Args:
-            value1 (float): input number
-
-        Returns:
-            float: result
-        """
-        return value1**3
-
-    def _cubert(self, value1: float) -> float:
-        """cube root
-
-        Args:
-            value1 (float): input number
-
-        Returns:
-            float: result
-        """
-        return value1**(1.0/3.0)
 
     def _pow(self, value1: float, value2: float) -> float:
         """power
@@ -288,7 +257,6 @@ class ScientificCalculator:
         Returns:
             float: the calculation result
         """
-        print(postfix)
 
         stack_cal = []
 
@@ -298,13 +266,16 @@ class ScientificCalculator:
             '*': self._mul,
             '/': self._div,
             '^': self._pow,
-            '!': self._factorial
+            '!': self._factorial,
+            'sin': self._sin,
+            'cos': self._cos,
+            'exp': self._exp,
         }
-
+        print(postfix)
         for item in postfix:
             if item in self.precedence.keys():
                 value1 = float(stack_cal.pop())
-                if item not in ['!']:
+                if item not in ['!', 'sin', 'cos']:
                     value2 = float(stack_cal.pop())
                     result = calculate_function[item](value1, value2)
                 else:
