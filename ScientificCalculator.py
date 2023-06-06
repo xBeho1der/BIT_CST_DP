@@ -271,7 +271,6 @@ class ScientificCalculator:
             'cos': self._cos,
             'exp': self._exp,
         }
-        print(postfix)
         for item in postfix:
             if item in self.precedence.keys():
                 value1 = float(stack_cal.pop())

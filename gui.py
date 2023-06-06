@@ -122,7 +122,7 @@ class Calculator(QWidget):
                     expression=self.line_edit.text())
                 last_word = list_temp[-1]
                 length_str = len(list_temp)
-                if last_word in isinstance(eval(last_word), float)or isinstance(eval(last_word), int):
+                if isinstance(eval(last_word), float) or isinstance(eval(last_word), int):
                     list_temp.insert(-1, self.special_sign[text])
                     return_str = "".join(list_temp)
                     self.line_edit.setText(return_str)
@@ -151,7 +151,7 @@ class Calculator(QWidget):
                 list_temp = ScientificCalculator().expression_pretreatment(
                     expression=self.line_edit.text())
                 last_word = list_temp[-1]
-                if isinstance(eval(last_word), float)or isinstance(eval(last_word), int) or last_word == ')' or last_word == '!':
+                if isinstance(eval(last_word), float) or isinstance(eval(last_word), int) or last_word == ')' or last_word == '!':
                     list_temp.append(self.special_sign[text])
                     return_str = "".join(list_temp)
                     self.line_edit.setText(return_str)
@@ -165,7 +165,7 @@ class Calculator(QWidget):
             try:
                 last_word = list_temp[-1]
                 length_str = len(list_temp)
-                if isinstance(eval(last_word), float)or isinstance(eval(last_word), int):
+                if isinstance(eval(last_word), float) or isinstance(eval(last_word), int):
                     list_temp.insert(-2, 'sin')
                     list_temp.insert(-1, '(')
                     list_temp.append(')')
