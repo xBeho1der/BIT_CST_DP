@@ -27,8 +27,8 @@ class Calculator(QWidget):
             'x'+add_superscript("y"): '^y',
         }
         self.triangle_sign = {
-            'sin': '',
-            'cos': ''
+            'sin': 'sin',
+            'cos': 'cos'
         }
         self.num = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
         self.sign = ['+', '-', '*', '/', '^', '(', ')', '!', 'sin', 'cos']
@@ -173,7 +173,7 @@ class Calculator(QWidget):
                 last_word = list_temp[-1]
                 length_str = len(list_temp)
                 if isinstance(eval(last_word), float) or isinstance(eval(last_word), int):
-                    list_temp.insert(-2, 'sin')
+                    list_temp.insert(-2, self.triangle_sign[text])
                     list_temp.insert(-1, '(')
                     list_temp.append(')')
                     return_str = "".join(list_temp)
@@ -181,14 +181,14 @@ class Calculator(QWidget):
                 elif last_word == '!':
                     for i in range(length_str-1):
                         if list_temp[length_str-i-1] != '!' and (list_temp[length_str-i-1] in self.sign or length_str-i-1 == 0):
-                            list_temp.insert(length_str-i-1, 'sin')
+                            list_temp.insert(length_str-i-1, self.triangle_sign[text])
                             break
                     return_str = "".join(list_temp)
                     self.line_edit.setText(return_str)
                 elif last_word == ')':
                     for i in range(length_str):
                         if list_temp[length_str-i-1] == '(':
-                            list_temp.insert(length_str-i-1, 'sin')
+                            list_temp.insert(length_str-i-1, self.triangle_sign[text])
                             break
                     return_str = "".join(list_temp)
                     self.line_edit.setText(return_str)
