@@ -18,6 +18,9 @@ class ScientificCalculator:
         }
         self.sign = ['+', '-', '*', '/', '^', '(', ')', '!', 'sin', 'cos']
 
+    def brackets_pare(self, expression_list: List) -> bool:
+        return True if expression_list.count('(') == expression_list.count(')') else False
+
     def expression_pretreatment(self, expression: str) -> List:
         """pretreat the input infix expression, dealing with "-" and "." in the expression.
 
@@ -83,46 +86,128 @@ class ScientificCalculator:
         return postfix
 
     def _fabs(self, value1: float) -> float:
+        """return the absolute value of value1
+
+        Args:
+            value1 (float): input number
+
+        Returns:
+            float: result
+        """
         return value1*(-1.0) if value1 < 0 else value1
 
     def _add(self, value1: float, value2: float) -> float:
+        """add
+
+        Args:
+            value1 (float): operate value1
+            value2 (float): operate value2
+
+        Returns:
+            float: result
+        """
         return value1+value2
 
     def _sub(self, value1: float, value2: float) -> float:
+        """subtraction
+
+        Args:
+            value1 (float): operate value1
+            value2 (float): operate value2
+
+        Returns:
+            float: result
+        """
         return value2-value1
 
     def _mul(self, value1: float, value2: float) -> float:
+        """multiplication
+
+        Args:
+            value1 (float): operate value1
+            value2 (float): operate value2
+
+        Returns:
+            float: result
+        """
         return value1*value2
 
     def _div(self, value1: float, value2: float) -> float:
+        """division
+
+        Args:
+            value1 (float): operate value1
+            value2 (float): operate value2
+
+        Returns:
+            float: result
+        """
         return value2/value1
 
     def _sqr(self, value1: float) -> float:
-        return value1*value1
+        """square
+
+        Args:
+            value1 (float): input number
+
+        Returns:
+            float: result
+        """
+        return value1**2
 
     def _sqrt(self, value1: float) -> float:
-        # TODO
+        """square root
+
+        Args:
+            value1 (float): input number
+
+        Returns:
+            float: result
+        """
         return value1**0.5
 
     def _cube(self, value1: float) -> float:
-        return value1*value1*value1
+        """cube
+
+        Args:
+            value1 (float): input number
+
+        Returns:
+            float: result
+        """
+        return value1**3
 
     def _cubert(self, value1: float) -> float:
-        # TODO
+        """cube root
+
+        Args:
+            value1 (float): input number
+
+        Returns:
+            float: result
+        """
         return value1**(1.0/3.0)
 
     def _pow(self, value1: float, value2: float) -> float:
-        # TODO
+        """power
+
+        Args:
+            value1 (float): base
+            value2 (float): power
+
+        Returns:
+            float: result
+        """
         return value2**value1
 
     def _factorial(self, value1: int) -> int:
-        """_summary_
+        """return the factorial of value1
 
         Args:
-            value1 (int): number
+            value1 (float): input number
 
         Returns:
-            int: the factorial of calculation
+            float: the factorial of value1
         """
         if value1 == 0:
             return 1
