@@ -112,6 +112,13 @@ class Calculator(QWidget):
                 self.line_edit.setText(str(res))
             except:
                 self.line_edit.setText('Error')
+        elif text == 'RAD':
+            try:
+                temp_string = self.line_edit.text()
+                res_string = ScientificCalculator()._radian(eval(temp_string))
+                self.line_edit.setText(str(res_string))
+            except:
+                self.line_edit.setText('Error')
         elif text == 'C':
             self.line_edit.clear()
         elif text == 'Backspace':
