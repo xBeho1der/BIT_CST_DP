@@ -73,7 +73,6 @@ def demonstrator() -> None:
             result = test == expect
             table.add_row([count, item, test, expect, result])
             data = [str(element) for element in [count, item, test, expect, result]]
-            print(data)
             writer.writerow(data)
     print(table)
 
