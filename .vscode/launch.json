@@ -5,11 +5,27 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: 当前文件",
+            "name": "Calculator",
             "type": "python",
             "request": "launch",
-            "program": "main.py",
-            "console": "externalTerminal",
+            "program": "run_calculator.py",
+            "args": [
+                "--defects",
+                "0"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "defects",
+            "type": "python",
+            "request": "launch",
+            "program": "run_calculator.py",
+            "args": [
+                "--defects",
+                "1"
+            ],
+            "console": "integratedTerminal",
             "justMyCode": true
         }
     ]
