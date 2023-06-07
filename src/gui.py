@@ -3,7 +3,15 @@ from PyQt5.QtWidgets import QWidget, QLineEdit, QPushButton, QGridLayout
 from ScientificCalculator import ScientificCalculator
 
 
-def add_superscript(text):
+def add_superscript(text) -> str:
+    """optimize the ui
+
+    Args:
+        text (str): string
+
+    Returns:
+        string: result
+    """
     superscript_mapping = str.maketrans(
         "0123456789+-=()abcdefghijklmnopqrstuvwxyzAB",
         "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖᵠʳˢᵗᵘᵛʷˣʸᶻ½⅓"
@@ -13,7 +21,12 @@ def add_superscript(text):
 
 class Calculator(QWidget):
 
-    def __init__(self, defects):
+    def __init__(self, defects: int):
+        """initialization
+
+        Args:
+            defects (int): mode 
+        """
         super().__init__()
         self.defects = defects
         self.setWindowTitle('Scientific Calculator')
@@ -96,7 +109,8 @@ class Calculator(QWidget):
         self.setLayout(layout)
 
     def button_clicked(self):
-
+        """button_clicked
+        """
         if self.line_edit.text() == 'Error':
             self.line_edit.clear()
         button = self.sender()
@@ -105,11 +119,10 @@ class Calculator(QWidget):
             try:
                 infix_expression = self.line_edit.text()
                 cal = ScientificCalculator()
-                print(self.defects)
                 if self.defects == 1:
                     res = cal.calculate_postfix_defects(cal.postfix(
                         cal.expression_pretreatment(infix_expression)))
-                else:    
+                else:
                     res = cal.calculate_postfix(cal.postfix(
                         cal.expression_pretreatment(infix_expression)))
                 self.line_edit.setText(str(res))

@@ -7,7 +7,6 @@ from test_demonstrator import demonstrator
 
 
 if __name__ == '__main__':
-
     parser = argparse.ArgumentParser(description="""
         select running mode of Calculator
                                      """)

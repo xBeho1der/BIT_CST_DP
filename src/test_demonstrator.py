@@ -4,9 +4,14 @@ import random
 import math
 from ScientificCalculator import ScientificCalculator
 import csv
-import os
+from typing import List
 
-def generate():
+def generate() -> List:
+    """generate the evaluate equation
+
+    Returns:
+        List: the equation list
+    """
     random.seed(0x7c)
     equations = []
     for _ in range(300):
@@ -51,6 +56,8 @@ def generate():
 
 
 def demonstrator() -> None:
+    """demonstrate the result
+    """
     equations = generate()
     table = PrettyTable(['No.', 'equation', 'output', 'expectation', 'result'])
     count = 0
