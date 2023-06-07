@@ -2,8 +2,7 @@ from gui import Calculator
 import sys
 from PyQt5.QtWidgets import QApplication
 import argparse
-from ScientificCalculator import ScientificCalculator
-from test import demonstrator
+from test_demonstrator import demonstrator
 
 
 
