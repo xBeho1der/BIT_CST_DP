@@ -4,7 +4,7 @@ import random
 import math
 from ScientificCalculator import ScientificCalculator
 import csv
-
+import os
 
 def generate():
     random.seed(0x7c)
@@ -49,24 +49,12 @@ def generate():
         equations.append(equation.rstrip())
     return equations
 
-def save(table_list):
-        # 定义CSV文件名
-
-
-        for table in table_list:
-            header = table.field_names
-            writer.writerow(header)
-            break
-        for table in table_list:
-            data = table.get_string().split('\n')
-            data = [row.split() for row in data]
-            writer.writerows(data)
 
 def demonstrator() -> None:
     equations = generate()
     table = PrettyTable(['No.', 'equation', 'output', 'expectation', 'result'])
     count = 0
-    csv_file = "table_data.csv"
+    csv_file = "test_results\\table_data.csv"
     with open(csv_file, 'w', newline='',encoding="utf-8") as file:
         writer = csv.writer(file)
         for item in equations:
