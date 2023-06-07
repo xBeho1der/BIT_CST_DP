@@ -1,8 +1,6 @@
-from PyQt5.QtGui import QIcon, QFont
-from PyQt5.QtWidgets import QApplication, QHBoxLayout, QMainWindow, QWidget, QVBoxLayout, QLineEdit, QPushButton, QGridLayout, QHeaderView
-import sys
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QWidget, QLineEdit, QPushButton, QGridLayout
 from ScientificCalculator import ScientificCalculator
-from math import pi, e
 
 
 def add_superscript(text):
@@ -15,8 +13,9 @@ def add_superscript(text):
 
 class Calculator(QWidget):
 
-    def __init__(self):
+    def __init__(self, defects):
         super().__init__()
+        self.defects = defects
         self.setWindowTitle('Scientific Calculator')
         self.special_sign = {
             "e"+add_superscript("x"): 'e^',
@@ -107,8 +106,13 @@ class Calculator(QWidget):
             try:
                 infix_expression = self.line_edit.text()
                 cal = ScientificCalculator()
-                res = cal.calculate_postfix(cal.postfix(
-                    cal.expression_pretreatment(infix_expression)))
+                print(self.defects)
+                if self.defects == 1:
+                    res = cal.calculate_postfix_defects(cal.postfix(
+                        cal.expression_pretreatment(infix_expression)))
+                else:    
+                    res = cal.calculate_postfix(cal.postfix(
+                        cal.expression_pretreatment(infix_expression)))
                 self.line_edit.setText(str(res))
             except:
                 self.line_edit.setText('Error')
@@ -181,14 +185,16 @@ class Calculator(QWidget):
                 elif last_word == '!':
                     for i in range(length_str-1):
                         if list_temp[length_str-i-1] != '!' and (list_temp[length_str-i-1] in self.sign or length_str-i-1 == 0):
-                            list_temp.insert(length_str-i-1, self.triangle_sign[text])
+                            list_temp.insert(
+                                length_str-i-1, self.triangle_sign[text])
                             break
                     return_str = "".join(list_temp)
                     self.line_edit.setText(return_str)
                 elif last_word == ')':
                     for i in range(length_str):
                         if list_temp[length_str-i-1] == '(':
-                            list_temp.insert(length_str-i-1, self.triangle_sign[text])
+                            list_temp.insert(
+                                length_str-i-1, self.triangle_sign[text])
                             break
                     return_str = "".join(list_temp)
                     self.line_edit.setText(return_str)

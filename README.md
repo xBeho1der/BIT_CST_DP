@@ -29,7 +29,7 @@ pip3 install -r .\requirements.txt
 You can run the Scientific Calculator by using the following command
 
 ```shell
-python .\main.py
+python .\run_calculator.py
 ```
 
 ## 3.demo

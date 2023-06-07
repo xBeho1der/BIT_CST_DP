@@ -1,4 +1,3 @@
-
 from typing import List
 from math import pi, e
 
@@ -120,6 +119,18 @@ class ScientificCalculator:
             float: result
         """
         return value1+value2
+    
+    def _add_defects(self, value1: float, value2: float) -> float:
+        """add
+
+        Args:
+            value1 (float): operate value1
+            value2 (float): operate value2
+
+        Returns:
+            float: result
+        """
+        return value1+value1
 
     def _sub(self, value1: float, value2: float) -> float:
         """subtraction
@@ -194,18 +205,15 @@ class ScientificCalculator:
         """
         return value1*pi/180
 
-    def _sin(self, value1: float, mode=0) -> float:
+    def _sin(self, value1: float) -> float:
         """sin
 
         Args:
             value1 (float): the input number
-            mode (int, optional): the input in radian or num. Defaults to 0, which stands for radian.
 
         Returns:
             float: the calculation result, round to the nearest 1e-10
         """
-        if mode == 1:
-            value1 = self._radian(value1)
         iteration, temp_r, temp_l = 1, value1, 0
         while self._fabs(temp_r) >= 1e-15:
             temp_l += temp_r
@@ -213,18 +221,15 @@ class ScientificCalculator:
             temp_r *= -value1**2/(iteration*(iteration-1))
         return round(temp_l, 10)
 
-    def _cos(self, value1: float, mode=0) -> float:
+    def _cos(self, value1: float) -> float:
         """cos
 
         Args:
             value1 (float): the input number
-            mode (int, optional): the input in radian or num. Defaults to 0, which stands for nums.
 
         Returns:
             float: the calculation result, round to the nearest 1e-10
         """
-        if mode == 1:
-            value1 = self._radian(value1)
         iteration, temp_r, temp_l = 0, 1, 0
         while self._fabs(temp_r) >= 1e-15:
             temp_l += temp_r
@@ -262,6 +267,43 @@ class ScientificCalculator:
 
         calculate_function = {
             '+': self._add,
+            '-': self._sub,
+            '*': self._mul,
+            '/': self._div,
+            '^': self._pow,
+            '!': self._factorial,
+            'sin': self._sin,
+            'cos': self._cos,
+            'exp': self._exp,
+        }
+        for item in postfix:
+            if item in self.precedence.keys():
+                value1 = float(stack_cal.pop())
+                if item not in ['!', 'sin', 'cos']:
+                    value2 = float(stack_cal.pop())
+                    result = calculate_function[item](value1, value2)
+                else:
+                    result = calculate_function[item](value1)
+                stack_cal.append(result)
+            else:
+                stack_cal.append(item)
+
+        return stack_cal.pop()
+
+    def calculate_postfix_defects(self, postfix: List) -> float:
+        """calculate the result of a postfix list
+
+        Args:
+            postfix (List): a list follow the postfix order
+
+        Returns:
+            float: the calculation result
+        """
+
+        stack_cal = []
+
+        calculate_function = {
+            '+': self._add_defects,
             '-': self._sub,
             '*': self._mul,
             '/': self._div,
