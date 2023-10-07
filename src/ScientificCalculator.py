@@ -1,6 +1,6 @@
 from typing import List
-from math import pi, e
-
+from math import pi, e, sin, cos, exp
+from numpy import deg2rad
 
 class ScientificCalculator:
     def __init__(self):
@@ -97,102 +97,17 @@ class ScientificCalculator:
             postfix.append(stack.pop())
         return postfix
 
-    def _fabs(self, value1: float) -> float:
-        """return the absolute value of value1
-
-        Args:
-            value1 (float): input number
-
-        Returns:
-            float: result
-        """
-        return value1*(-1.0) if value1 < 0 else value1
-
-    def _add(self, value1: float, value2: float) -> float:
-        """add
-
-        Args:
-            value1 (float): operate value1
-            value2 (float): operate value2
-
-        Returns:
-            float: result
-        """
-        return value1+value2
+    def calculate(self, value1: float, value2: float) -> float:
+        pass
     
-    def _add_defects(self, value1: float, value2: float) -> float:
-        """add
-
-        Args:
-            value1 (float): operate value1
-            value2 (float): operate value2
-
-        Returns:
-            float: result
-        """
-        return value1+value1
-
-    def _sub(self, value1: float, value2: float) -> float:
-        """subtraction
-
-        Args:
-            value1 (float): operate value1
-            value2 (float): operate value2
-
-        Returns:
-            float: result
-        """
-        return value2-value1
-
-    def _mul(self, value1: float, value2: float) -> float:
-        """multiplication
-
-        Args:
-            value1 (float): operate value1
-            value2 (float): operate value2
-
-        Returns:
-            float: result
-        """
-        return value1*value2
-
-    def _div(self, value1: float, value2: float) -> float:
-        """division
-
-        Args:
-            value1 (float): operate value1
-            value2 (float): operate value2
-
-        Returns:
-            float: result
-        """
-        return value2/value1
-
-    def _pow(self, value1: float, value2: float) -> float:
-        """power
-
-        Args:
-            value1 (float): base
-            value2 (float): power
-
-        Returns:
-            float: result
-        """
-        return value2**value1
-
-    def _factorial(self, value1: int) -> int:
-        """return the factorial of value1
-
-        Args:
-            value1 (float): input number
-
-        Returns:
-            float: the factorial of value1
-        """
-        if value1 == 0:
-            return 1
-        else:
-            return value1 * self._factorial(value1 - 1)
+    def sin(self, value1: float) -> float:
+        pass
+    
+    def cos(self, value1: float) -> float:
+        pass
+    
+    def exp(self, value1: float) -> float:
+        pass
 
     def _radian(self, value1: float) -> float:
         """convert the number into the radian
@@ -203,55 +118,7 @@ class ScientificCalculator:
         Returns:
             float: the radian expression
         """
-        return value1*pi/180
-
-    def _sin(self, value1: float) -> float:
-        """sin
-
-        Args:
-            value1 (float): the input number
-
-        Returns:
-            float: the calculation result, round to the nearest 1e-10
-        """
-        iteration, temp_r, temp_l = 1, value1, 0
-        while self._fabs(temp_r) >= 1e-15:
-            temp_l += temp_r
-            iteration += 2
-            temp_r *= -value1**2/(iteration*(iteration-1))
-        return round(temp_l, 10)
-
-    def _cos(self, value1: float) -> float:
-        """cos
-
-        Args:
-            value1 (float): the input number
-
-        Returns:
-            float: the calculation result, round to the nearest 1e-10
-        """
-        iteration, temp_r, temp_l = 0, 1, 0
-        while self._fabs(temp_r) >= 1e-15:
-            temp_l += temp_r
-            iteration += 2
-            temp_r *= -value1**2/(iteration*(iteration-1))
-        return round(temp_l, 10)
-
-    def _exp(self, value1: float) -> float:
-        """exp
-
-        Args:
-            value1 (float): the input number
-
-        Returns:
-            float: the calculation result, round to the nearest 1e-10
-        """
-        iteration, temp_r, temp_l = 0, 1, 0
-        while self._fabs(temp_r) >= 1e-15:
-            temp_l += temp_r
-            iteration += 1
-            temp_r *= value1/(iteration)
-        return round(temp_l, 10)
+        return deg2rad(value1)
 
     def calculate_postfix(self, postfix: List) -> float:
         """calculate the result of a postfix list
@@ -265,64 +132,66 @@ class ScientificCalculator:
 
         stack_cal = []
 
-        calculate_function = {
-            '+': self._add,
-            '-': self._sub,
-            '*': self._mul,
-            '/': self._div,
-            '^': self._pow,
-            '!': self._factorial,
-            'sin': self._sin,
-            'cos': self._cos,
-            'exp': self._exp,
+        calculate_strategy = {
+            '+': AdditionStrategy(),
+            '-': SubtractionStrategy(),
+            '*': MultiplicationStrategy(),
+            '/': DivisionStrategy(),
+            '^': PowerStrategy(),
+            '!': FactorialStrategy(),
+            'sin': MathTrigonometryAdapter(),
+            'cos': MathTrigonometryAdapter(),
+            'exp': MathTrigonometryAdapter(),
         }
         for item in postfix:
             if item in self.precedence.keys():
                 value1 = float(stack_cal.pop())
                 if item not in ['!', 'sin', 'cos']:
                     value2 = float(stack_cal.pop())
-                    result = calculate_function[item](value1, value2)
-                else:
-                    result = calculate_function[item](value1)
+                    result = calculate_strategy[item].calculate(value1, value2)
+                elif item == '!':
+                    result = calculate_strategy[item].calculate(value1)
+                elif item in ['sin', 'cos']:
+                    result = getattr(calculate_strategy[item], item)(value1)
                 stack_cal.append(result)
             else:
                 stack_cal.append(item)
 
         return stack_cal.pop()
 
-    def calculate_postfix_defects(self, postfix: List) -> float:
-        """calculate the result of a postfix list
+class AdditionStrategy(ScientificCalculator):
+    def calculate(self, value1: float, value2: float) -> float:
+        return value1 + value2
 
-        Args:
-            postfix (List): a list follow the postfix order
+class SubtractionStrategy(ScientificCalculator):
+    def calculate(self, value1: float, value2: float) -> float:
+        return value2 - value1
 
-        Returns:
-            float: the calculation result
-        """
+class MultiplicationStrategy(ScientificCalculator):
+    def calculate(self, value1: float, value2: float) -> float:
+        return value1 * value2
 
-        stack_cal = []
+class DivisionStrategy(ScientificCalculator):
+    def calculate(self, value1: float, value2: float) -> float:
+        return value2 / value1
 
-        calculate_function = {
-            '+': self._add_defects,
-            '-': self._sub,
-            '*': self._mul,
-            '/': self._div,
-            '^': self._pow,
-            '!': self._factorial,
-            'sin': self._sin,
-            'cos': self._cos,
-            'exp': self._exp,
-        }
-        for item in postfix:
-            if item in self.precedence.keys():
-                value1 = float(stack_cal.pop())
-                if item not in ['!', 'sin', 'cos']:
-                    value2 = float(stack_cal.pop())
-                    result = calculate_function[item](value1, value2)
-                else:
-                    result = calculate_function[item](value1)
-                stack_cal.append(result)
-            else:
-                stack_cal.append(item)
+class PowerStrategy(ScientificCalculator):
+    def calculate(self, value1: float, value2: float) -> float:
+        return value2 ** value1
 
-        return stack_cal.pop()
+class FactorialStrategy(ScientificCalculator):
+    def calculate(self, value1: float) -> float:
+        if value1 == 0:
+            return 1
+        else:
+            return value1 * self.calculate(value1 - 1)
+        
+class MathTrigonometryAdapter(ScientificCalculator):
+    def sin(self, value1: float) -> float:
+        return sin(value1)
+
+    def cos(self, value1: float) -> float:
+        return cos(value1)
+
+    def exp(self, value1: float) -> float:
+        return exp(value1)

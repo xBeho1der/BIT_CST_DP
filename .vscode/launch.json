@@ -10,23 +10,10 @@
             "request": "launch",
             "program": "src\\run_calculator.py",
             "args": [
-                "--defects",
-                "0"
+
             ],
             "console": "integratedTerminal",
             "justMyCode": true
         },
-        {
-            "name": "defects",
-            "type": "python",
-            "request": "launch",
-            "program": "src\\run_calculator.py",
-            "args": [
-                "--defects",
-                "1"
-            ],
-            "console": "integratedTerminal",
-            "justMyCode": true
-        }
     ]
 }

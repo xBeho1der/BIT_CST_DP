@@ -21,14 +21,9 @@ def add_superscript(text) -> str:
 
 class Calculator(QWidget):
 
-    def __init__(self, defects: int):
-        """initialization
+    def __init__(self):
 
-        Args:
-            defects (int): mode 
-        """
         super().__init__()
-        self.defects = defects
         self.setWindowTitle('Scientific Calculator')
         self.special_sign = {
             "e"+add_superscript("x"): 'e^',
@@ -36,7 +31,7 @@ class Calculator(QWidget):
             'x'+add_superscript("A"): '^(1.0/2)',
             'x'+add_superscript("3"): '^3',
             'x'+add_superscript("B"): '^(1.0/3)',
-            'x'+add_superscript("y"): '^y',
+            'x'+add_superscript("y"): '^',
         }
         self.triangle_sign = {
             'sin': 'sin',
@@ -119,12 +114,8 @@ class Calculator(QWidget):
             try:
                 infix_expression = self.line_edit.text()
                 cal = ScientificCalculator()
-                if self.defects == 1:
-                    res = cal.calculate_postfix_defects(cal.postfix(
-                        cal.expression_pretreatment(infix_expression)))
-                else:
-                    res = cal.calculate_postfix(cal.postfix(
-                        cal.expression_pretreatment(infix_expression)))
+                res = cal.calculate_postfix(cal.postfix(
+                    cal.expression_pretreatment(infix_expression)))
                 self.line_edit.setText(str(res))
             except:
                 self.line_edit.setText('Error')
