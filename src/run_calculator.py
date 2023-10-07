@@ -5,13 +5,20 @@ import argparse
 from test_demonstrator import demonstrator
 
 
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="""
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="""
         select running mode of Calculator
-                                     """)
-    parser.add_argument("--tests", "-t",
-                        metavar="", type=str, default="0", help="run the calculator with tests results or not")
+                                     """
+    )
+    parser.add_argument(
+        "--tests",
+        "-t",
+        metavar="",
+        type=str,
+        default="0",
+        help="run the calculator with tests results or not",
+    )
     args = parser.parse_args()
     tests = eval(args.tests)
     if tests:

@@ -1,1 +1,1 @@
-python .\src\run_calculator.py -d 0 -t 1
+python .\src\run_calculator.py -t 1
