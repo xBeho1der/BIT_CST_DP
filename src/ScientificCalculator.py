@@ -109,6 +109,18 @@ class ScientificCalculator:
     def exp(self, value1: float) -> float:
         pass
 
+    def _observation(self, value1: float, observation_mode: str) -> str:
+        result_map = {
+            "bin": BinaryObserver(),
+            "oct": OctalObserver(),
+            "hex": HexadecimalObserver(),
+            "dec": DecimalObserver()
+        }
+        return result_map[observation_mode].update(int(value1))
+    
+    def update(self, value1: float) -> float:
+        pass
+
     def _radian(self, value1: float) -> float:
         """convert the number into the radian
 
@@ -195,3 +207,19 @@ class MathTrigonometryAdapter(ScientificCalculator):
 
     def exp(self, value1: float) -> float:
         return exp(value1)
+
+class DecimalObserver(ScientificCalculator):
+    def update(self, value1):
+        return value1
+
+class BinaryObserver(ScientificCalculator):
+    def update(self, value1):
+        return bin(value1)
+
+class OctalObserver(ScientificCalculator):
+    def update(self, value1):
+        return oct(value1)
+
+class HexadecimalObserver(ScientificCalculator):
+    def update(self, value1):
+        return hex(value1)

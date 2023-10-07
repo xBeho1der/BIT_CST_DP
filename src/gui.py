@@ -54,7 +54,8 @@ class Calculator(QWidget):
             'x'+add_superscript("A"),
             'x'+add_superscript("3"),
             'x'+add_superscript("B"),
-            'x'+add_superscript("y"), "e", "pi"
+            'x'+add_superscript("y"), "e", "pi",
+            "bin", "hex", "oct", "dec"
         ]
 
         layout = QGridLayout()
@@ -123,6 +124,14 @@ class Calculator(QWidget):
             try:
                 temp_string = self.line_edit.text()
                 res_string = ScientificCalculator()._radian(eval(temp_string))
+                self.line_edit.setText(str(res_string))
+            except:
+                self.line_edit.setText('Error')
+        elif text in ['bin', 'hex', 'oct', 'dec']:
+            try:
+                temp_string = self.line_edit.text()
+                res_string = ScientificCalculator()._observation(
+                    eval(temp_string), text)
                 self.line_edit.setText(str(res_string))
             except:
                 self.line_edit.setText('Error')
