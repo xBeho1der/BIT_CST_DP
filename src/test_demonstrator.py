@@ -16,8 +16,8 @@ def generate() -> List:
     random.seed(0x7C)
     equations = []
     for _ in range(3000):
-        num1 = round(random.uniform(0, 150), 2)  # 随机生成第一个小数
-        num2 = round(random.uniform(0, 150), 2)  # 随机生成第二个小数
+        num1 = round(random.uniform(0, 100), 2)  # 随机生成第一个小数
+        num2 = round(random.uniform(0, 100), 2)  # 随机生成第二个小数
         operator = random.choice(
             ["+", "-", "*", "/", "**", "sqrt", "cubert", "exp", "sin", "cos"]
         )  # 随机选择操作符
@@ -25,6 +25,11 @@ def generate() -> List:
             result = round(num1 + num2, 2)
             equation = f"{num1} + {num2} = "
         elif operator == "-":
+            if num1 > 60 or num2 > 60:
+                if num1 > num2:
+                    num1, num2 = num2, num1
+                else:
+                    num1, num2 = num1, num2
             result = round(num1 - num2, 2)
             equation = f"{num1} - {num2} = "
         elif operator == "*":

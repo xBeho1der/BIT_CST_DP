@@ -6,7 +6,7 @@ from numpy import deg2rad
 
 class BigNumberCalculator:
     def __init__(self):
-        self.base = 100
+        self.base = 60
 
     def split_big_number(self, big_num):
         a = big_num // self.base
@@ -39,9 +39,9 @@ class BigNumberCalculator:
             self.calculator = calculator
 
         def calculate(self, value1: float, value2: float) -> float:
-            a1, b1 = self.calculator.split_big_number(value1)
-            a2, b2 = self.calculator.split_big_number(value2)
-            if value1 <= value2:
+            a1, b1 = self.calculator.split_big_number(value2)
+            a2, b2 = self.calculator.split_big_number(value1)
+            if value1 >= value2:
                 a_diff = a1 - a2
                 b_diff = b1 - b2
 
@@ -55,6 +55,7 @@ class BigNumberCalculator:
                 if b_diff < 0:
                     a_diff -= 1
                     b_diff += self.calculator.base
+
             print("Calling Big Num Subtraction.")
 
             return self.calculator.combine_big_number(a_diff, b_diff)
