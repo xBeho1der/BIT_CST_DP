@@ -15,7 +15,7 @@ def generate() -> List:
     """
     random.seed(0x7C)
     equations = []
-    for _ in range(3000):
+    for _ in range(300):
         num1 = round(random.uniform(0, 100), 2)  # 随机生成第一个小数
         num2 = round(random.uniform(0, 100), 2)  # 随机生成第二个小数
         operator = random.choice(

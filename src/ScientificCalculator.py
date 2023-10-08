@@ -6,7 +6,7 @@ from numpy import deg2rad
 
 class BigNumberCalculator:
     def __init__(self):
-        self.base = 60
+        self.base = 100
 
     def split_big_number(self, big_num):
         a = big_num // self.base
@@ -41,7 +41,7 @@ class BigNumberCalculator:
         def calculate(self, value1: float, value2: float) -> float:
             a1, b1 = self.calculator.split_big_number(value2)
             a2, b2 = self.calculator.split_big_number(value1)
-            if value1 >= value2:
+            if value1 <= value2:
                 a_diff = a1 - a2
                 b_diff = b1 - b2
 

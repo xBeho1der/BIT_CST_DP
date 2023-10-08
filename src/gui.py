@@ -34,7 +34,7 @@ class Calculator(QWidget):
         self.triangle_sign = {"sin": "sin", "cos": "cos"}
         self.sign = ["+", "-", "*", "/", "^", "(", ")", "!", "sin", "cos"]
 
-        self.resize(960, 700)
+        self.resize(800, 600)
         self.line_edit = QLineEdit(self)
         self.line_edit.setReadOnly(True)
         self.buttons = [
