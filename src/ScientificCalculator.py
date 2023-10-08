@@ -6,7 +6,7 @@ from numpy import deg2rad
 
 class BigNumberCalculator:
     def __init__(self):
-        self.base = 100
+        self.base = 65535
 
     def split_big_number(self, big_num):
         a = big_num // self.base
@@ -67,14 +67,18 @@ class BigNumberCalculator:
         def calculate(self, value1: float, value2: float) -> float:
             a1, b1 = self.calculator.split_big_number(value1)
             a2, b2 = self.calculator.split_big_number(value2)
-            Z = a1 * a2
-            Y = b2 * a1 + b1 * a2
             X = b1 * b2
+            Y = a2 * b1 + a1 * b2
+            Z = a1 * a2
 
-            Y += Z // self.calculator.base
-            Z %= self.calculator.base
-            X += Y // self.calculator.base
-            Y %= self.calculator.base
+            # 处理进位
+            carry1 = X // self.calculator.base
+            X %= self.calculator.base
+
+            carry2 = (Y + carry1) // self.calculator.base
+            Y = (Y + carry1) % self.calculator.base
+
+            Z += carry2
 
             print("Calling Big Num Multiplication.")
 
